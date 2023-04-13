@@ -1,9 +1,9 @@
 ## Specific gitignores for this project
 CCI_electricity.Rproj
 
-# do not track anything in data/meters
-data/meters/*.csv
-data/meters/*.xlsx
+# do not track anything in data_meters
+data_meters/*.csv
+data_meters/*.xlsx
 
 
 

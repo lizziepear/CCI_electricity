@@ -2,7 +2,10 @@
 title: "process meter readings"
 author: "Lizzie Pearmain"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  github_document:
+    toc: true
+    toc_depth: 2
 editor_options: 
   chunk_output_type: console
 ---
@@ -21,18 +24,172 @@ Here we read any required packages, functions, and metadata.
 library(dplyr)
 library(lubridate)
 library(tidyr)
+library(readxl)
+library(ggplot2)
 
 ## source functions
-
-## get filepaths using the last element in the split-up getwd()
-## NB. this may not work on non-windows computers
-
-
+source("functions.R")
 
 ## read metadata
-meta <- read.csv("")
+meta <- read.csv("meter_metadata.csv")
 
 ```
 
+## read meters
+
+Here we read in the data from all the meters and save into one big file.
+
+```{r test-read}
+
+## test the function for reading in a file and converting it to a daily sum
+t <- read_meter_xlsx("data_meters/02B0F5-S02 DB-3D Power.xlsx")
+head(t)
+str(t)
+
+## test the function for calculating daily sums
+t_daily <- calc_daily_sums(t)
+head(t_daily)
+str(t_daily)
+
+rm(t, t_daily)
+
+```
+
+```{r read-all-files}
+
+## vector of all the filenames
+files <- paste(meta$meter_ref, ".xlsx", sep="")
+
+## check all the files are present in the data_meters folder,
+##  otherwise print out a list of which files are missing
+if (! length(files[which(! files %in% list.files("data_meters"))]) == 0) {
+  stop(paste("Not all the meter files could be found in the data_meters folder.",
+             "The following files are missing:\n",
+             paste(files[which(! files %in% list.files("data_meters"))], collapse="\n ")
+                   ))
+}
+
+## read in all the files and bind into one data frame
+filepaths <- paste("data_meters/", files, sep="")
+df.list <- lapply(filepaths, read_meter_xlsx)
+df <- do.call(rbind, df.list)
+rm(df.list)
+
+## remove any duplicated rows
+df$duplicated <- duplicated(df)
+df_new <- subset(df, duplicated == FALSE)
+if (nrow(df_new) != nrow(df)) {
+  cat("NOTE:", (nrow(df) - nrow(df_new)), "duplicated row(s) removed.")
+}
+df <- df_new
+rm(df_new)
+
+head(df)
+str(df)
+
+```
+
+Since we don't want the half-hourly readings (after doing some debugging here if needed), let's turn them into daily sums.
+
+```{r calc-daily-sums}
+## turn this into daily sums instead of raw data
+
+df <- calc_daily_sums(df)
+
+head(df)
+str(df)
+
+```
+
+## merge metadata
+
+Here we merge in the metadata, joining by `meter_ref` field.
+
+```{r merge-in-meta}
+
+df <- merge(df, meta)
+
+head(df)
+str(df)
+
+```
+
+## fill power/lighting gaps
+
+Here we sort out the fact that some meters are just power, some are just lighting, and some are both power and lighting.
+
+Let's make a `pwr`, `ltg`, and `both` column for all meter/days.
+
+```{r power-lighting}
+
+## test on a subset of the dataset
+# t_df <- subset(df, meter_group %in% c("02B0F5-DB-3D", "02B0FB-DB-ET-1"))
+# t_new <- combine_power_lighting(t_df)
+
+## apply the function to the whole dataset
+df_new <- combine_power_lighting(df)
+
+## we should have half as many rows now - each pair of meters has been combined into one row
+nrow(df_new) / nrow(df)
+
+## check data
+head(df)
+str(df)
+
+## update df and clean up
+df <- df_new
+rm(df_new)
+
+```
+
+## write to file
+
+Optional: write the resulting dataframe to file.
+
+```{r write-to-file}
+
+write.csv(df, "processed_meter_data.csv", row.names=FALSE)
+
+```
+
+
+## example summaries
+
+Just an example of summarising the data.
+
+```{r summaries-example}
+
+head(df)
+
+## sum over all meters in a floor/location by year and month
+summ1 <- df %>%
+  dplyr::group_by(floor, location, perc_to_CCI, year, month) %>%
+  dplyr::summarise(total_usage = sum(both)) %>% as.data.frame()
+
+head(summ1)
+
+```
+
+
+## example plots
+
+An example plot using the summary made above.
+
+```{r plots-example}
+
+ggplot2::ggplot(data = summ1, aes(x = month, y = total_usage)) +
+  ggplot2::geom_line() +
+  ggplot2::facet_wrap(~location)
+
+
+```
+
+
+## next steps
+
+Develop some functions to take the overall table and output the summaries and plots that would be useful.
+
+
+*End.*
 
 

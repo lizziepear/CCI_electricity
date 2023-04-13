@@ -1,7 +1,7 @@
 # data_meters
 
-Here the 39 .xlsx files from the meters are stored.
+This folder contains the raw `.xlsx` files from each meter. There should be 39 overall. These files are not tracked by git.
 
-## to do
+To populate this folder on your own computer for testing, copy in all the `.xlsx` files from e.g. the `Downloads for CCI CC_2H22` folder.
 
-* implement an archive for old versions of the meter readings? What to do when you download new readings but still want data from the old readings to be in the output?
+(For some reason the `Downloads for CCI CC_1H22` folder has a couple of meter files missing.)

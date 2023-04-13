@@ -1,0 +1,53 @@
+floor,location,meter_ref,meter_group,meter_type,perc_to_CCI
+LG/Pod,Lower Ground / Podium ,02B0F8-S20 DB-LGA-Ltg,02B0F8-DB-LGA,ltg,18.14
+LG/Pod,Lower Ground / Podium ,02B0F8-S21 DB-LGA-Pwr,02B0F8-DB-LGA,pwr,18.14
+LG/Pod,Lower Ground / Podium ,02B0F9-DB-PB Lighting,02B0F9-DB-PB,lgt,36.95
+LG/Pod,Lower Ground / Podium ,02B0F9-DB-PB Power,02B0F9-DB-PB,pwr,36.95
+1,Floor 1 Zone A,02B0FA-S16 DB-1A Power,02B0FA-DB-1A,pwr,100
+1,Floor 1 Zone A,02B0FA-S17 DB-1A Lighting,02B0FA-DB-1A,lgt,100
+1,Floor 1 Zone B,02B0F9-DB-1B Lighting,02B0F9-DB-1B,lgt,100
+1,Floor 1 Zone B,02B0F9-DB-1B Power,02B0F9-DB-1B,pwr,100
+1,Floor 1 Zone C,02B0FB-S03 DB-1C Lighting,02B0FB-DB-1C,lgt,100
+1,Floor 1 Zone C,02B0FB-S09 DB-1C Power,02B0FB-DB-1C,pwr,100
+2,Floor 2 Zone A,02B0FA-S03 DB-2A Power,02B0FA-DB-2A,pwr,100
+2,Floor 2 Zone A,02B0FA-S18 DB-2A Lighting,02B0FA-DB-2A,lgt,100
+2,Floor 2 Zone B,02B0F9-DB-2B Lighting,02B0F9-DB-2B,lgt,100
+2,Floor 2 Zone B,02B0F9-DB-2B Power,02B0F9-DB-2B,pwr,100
+2,Floor 2 Zone C,02B0FB-S04 DB-2C Lighting,02B0FB-DB-2C,lgt,100
+2,Floor 2 Zone C,02B0FB-S08 DB-2C Power,02B0FB-DB-2C,pwr,100
+2,Floor 2 Zone D,02B0F5-S04 DB-2D Lighting,02B0F5-DB-2D,lgt,68.64
+2,Floor 2 Zone D,02B0F5-S05 DB-2D Power,02B0F5-DB-2D,pwr,68.64
+3,Floor 3 Zone A,02B0FA-S02 DB-3A Power,02B0FA-DB-3A,pwr,100
+3,Floor 3 Zone A,02B0FA-S19 DB-3A Lighting,02B0FA-DB-3A,lgt,100
+3,Floor 3 Zone B,02B0F9-DB-3B Lighting,02B0F9-DB-3B,lgt,100
+3,Floor 3 Zone B,02B0F9-DB-3B Power,02B0F9-DB-3B,pwr,100
+3,Floor 3 Zone C,02B0FB-S05 DB-3C Lighting,02B0FB-DB-3C,lgt,100
+3,Floor 3 Zone C,02B0FB-S06 DB-3C Power,02B0FB-DB-3C,pwr,100
+3,Floor 3 Zone D,02B0F5-S02 DB-3D Power,02B0F5-DB-3D,pwr,100
+3,Floor 3 Zone D,02B0F5-S03 DB-3D Lighting,02B0F5-DB-3D,lgt,100
+NA,West Tower,02B0FA-S14 DB-WT-PM Ltg pwr total,02B0FA-DB-WT-PM,both,100
+NA,West Tower,02B0FA-S15 DB-WT-PM Ltg only,02B0FA-DB-WT-PM,ltg,100
+NA,West Tower,02B0FA-S13 DB-WT-1 Ltg pwr total,02B0FA-DB-WT-1,both,100
+NA,West Tower,02B0FA-S12 DB-WT-1 Ltg only,02B0FA-DB-WT-1,ltg,100
+NA,West Tower,02B0FA-S11 DB-WT-1ML Ltg pwr total,02B0FA-DB-WT-1ML,both,100
+NA,West Tower,02B0FA-S10 DB-WT-1ML Ltg only,02B0FA-DB-WT-1ML,ltg,100
+NA,West Tower,02B0FA-S09 DB-WT-2ML Ltg power total,02B0FA-DB-WT-2ML,both,100
+NA,West Tower,02B0FA-S08 DB-WT-2ML Ltg only,02B0FA-DB-WT-2ML,ltg,100
+NA,West Tower,02B0FA-S06 DB-WT-3 Ltg pwr total,02B0FA-DB-WT-3,both,100
+NA,West Tower,02B0FA-S07 DB-WT-3 Ltg only,02B0FA-DB-WT-3,ltg,100
+NA,West Tower,02B0FA-S05 DB-WT-3ML Ltg pwr total,02B0FA-DB-WT-3ML,both,100
+NA,West Tower,02B0FA-S04 DB-WT-3ML Ltg only,02B0FA-DB-WT-3ML,ltg,100
+NA,East Tower,02B0FB-S10 DB-ET-PM Ltg pwr total,02B0FB-DB-ET-PM,both,100
+NA,East Tower,02B0FB-S11 DB-ET-PM Ltg only,02B0FB-DB-ET-PM,ltg,100
+NA,East Tower,02B0FB-S12 DB-ET-1 Ltg pwr total,02B0FB- DB-ET-1,both,100
+NA,East Tower,02B0FB-S13 DB-ET-1 Lgt only,02B0FB-DB-ET-1,ltg,100
+NA,East Tower,02B0FB-S14 DB-ET-1ML - Ltg pwr total,02B0FB-DB-ET-1ML,both,100
+NA,East Tower,02B0FB-S15 DB-ET-1ML - Ltg only,02B0FB-DB-ET-1ML,ltg,100
+NA,East Tower,02B0FB-S17 DB-ET-2ML - Ltg pwr total,02B0FB-DB-ET-2ML,both,100
+NA,East Tower,02B0FB-S16 DB-ET-2ML - Ltg only,02B0FB-DB-ET-2ML,ltg,100
+NA,East Tower,02B0FB-S18 DB-ET-3 - Ltg pwr total,02B0FB-DB-ET-3,both,100
+NA,East Tower,02B0FB-S19 DB-ET-3 - Ltg only,02B0FB-DB-ET-3,ltg,100
+NA,East Tower,02B0FB-S20 DB-ET-3M - Ltg pwr total,02B0FB-DB-ET-3M,both,100
+NA,East Tower,02B0FB-S21 DB-ET-3M - Ltg only,02B0FB-DB-ET-3M,ltg,100
+NA,East Tower,02B0FB-S23 DB-ET-U3M - Ltg pwr total,02B0FB-DB-ET-U3M,both,100
+NA,East Tower,02B0FB-S22 DB-ET-U3M - Ltg only,02B0FB-DB-ET-U3M,ltg,100

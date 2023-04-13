@@ -1,3 +1,14 @@
+## Specific gitignores for this project
+CCI_electricity.Rproj
+
+# do not track anything in data/meters
+data/meters/*.csv
+data/meters/*.xlsx
+
+
+
+## General gitignore for R projects
+
 # History files
 .Rhistory
 .Rapp.history

@@ -1,5 +1,6 @@
 #' FUNCTIONS for CCI electricity monitoring
-#' 
+
+#'
 #' Read meter data from xlsx
 #' 
 #' Reads and formats the data from an individual electricity meter XLSX file.
@@ -39,7 +40,7 @@ read_meter_xlsx <- function(filename) {
 
 }
 
-
+#'
 #' Turn raw meter data into daily sums
 #' 
 #' Calculates daily sum of power usage from meter reading data.
@@ -69,7 +70,7 @@ calc_daily_sums <- function(my_df) {
   return(df_dailysum)
 }
 
-
+#'
 #' Process the power vs lighting vs both usage
 #' 
 #' Takes the daily sum data and uses \code{tidyr::pivot_wider} to match the 

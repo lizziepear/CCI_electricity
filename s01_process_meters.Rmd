@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 2
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -16,9 +16,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## setup
 
-Here we read any required packages, functions, and metadata.
+Here we load any required packages, source functions, and read in metadata.
 
-```{r set-up-read-meta}
+```{r set-up-read-meta, message=FALSE, warning=FALSE}
 
 ## load packages
 library(dplyr)
@@ -37,23 +37,33 @@ meta <- read.csv("meter_metadata.csv")
 
 ## read meters
 
-Here we read in the data from all the meters and save into one big file.
+Here we read in the data from all the meters and save into one big file. 
+
+First we'll test the functions on one file (this chunk was only used during development to test and debug, so it's now commented out and doesn't run).
 
 ```{r test-read}
 
 ## test the function for reading in a file and converting it to a daily sum
-t <- read_meter_xlsx("data_meters/02B0F5-S02 DB-3D Power.xlsx")
-head(t)
-str(t)
+# t <- read_meter_xlsx("data_meters/02B0F5-S02 DB-3D Power.xlsx")
+# str(t)   # check what the data look like
+# head(t)
 
 ## test the function for calculating daily sums
-t_daily <- calc_daily_sums(t)
-head(t_daily)
-str(t_daily)
+# t_daily <- calc_daily_sums(t)
+# head(t_daily)
+# str(t_daily)
 
-rm(t, t_daily)
+# rm(t, t_daily)  # clean up the test file
 
 ```
+
+Now we get a list of the files we *should* have in the `data_meters` folder (i.e. all 39 meter names from the `meta` table followed by `.xlsx`).
+
+We check that all the meter files are present in the `data_meters` folder, and print out a list of any that are missing.
+
+We read in all the meter files using `lapply()` with the `read_meter_xlsx()` function tested above, and `rbind()` all the data from each meter into one big data frame. We also remove any duplicated rows in case of time period overlaps.
+
+*Note: we need to work out how to allow processing of multiple sets of files at the same time, e.g. the set of downloads from 2022-06 and from 2022-12.* Where we have multiple `.xlsx` files from a single meter, this code may fail, and it may be better to just read in all `.xlsx` files in the `data_meters` folder, check the `meter_ref` field against the metadata to make sure all the files can be matched to a `meter_ref` in the metadata, and remove any duplicates in `meter_ref`&`date` i.e. overlapping timestamps.
 
 ```{r read-all-files}
 
@@ -70,30 +80,36 @@ if (! length(files[which(! files %in% list.files("data_meters"))]) == 0) {
 }
 
 ## read in all the files and bind into one data frame
-filepaths <- paste("data_meters/", files, sep="")
-df.list <- lapply(filepaths, read_meter_xlsx)
-df <- do.call(rbind, df.list)
-rm(df.list)
+filepaths <- paste("data_meters/", files, sep="")  # make full filepaths instead of just filenames
+df.list <- lapply(filepaths, read_meter_xlsx)      # apply the read_meter_xlsx to all filepaths and save all dataframes in a list
+df <- do.call(rbind, df.list)                      # rbind together all the dataframes in the list
+rm(df.list)                                        # clean up by deleting the list
 
 ## remove any duplicated rows
-df$duplicated <- duplicated(df)
-df_new <- subset(df, duplicated == FALSE)
-if (nrow(df_new) != nrow(df)) {
+df$duplicated <- duplicated(df)             # new field indicating if row is a full duplicate of an earlier row
+df_new <- subset(df, duplicated == FALSE)   # subset to only rows where duplicated = FALSE
+if (nrow(df_new) != nrow(df)) {             # if any rows were removed, print out a note saying how many
   cat("NOTE:", (nrow(df) - nrow(df_new)), "duplicated row(s) removed.")
 }
-df <- df_new
-rm(df_new)
+df <- df_new  # replace old data with new
+rm(df_new)    # clean up
+df$duplicated <- NULL  # remove the duplicated field - no longer needed
 
-head(df)
-str(df)
+head(df)  # check data structure
+str(df)   # check column formats
 
 ```
 
-Since we don't want the half-hourly readings (after doing some debugging here if needed), let's turn them into daily sums.
+Here we can do some debugging if needed, to remove any usage values that are way too high (there are sometimes glitches causing dodgy readings).
+
+
+## sum daily usage
+
+Since we don't need all the half-hourly readings, we use the `calc_daily_sums()` function which performs a rowwise sum to make an overall usage value per meter per day. It also removes all the half-hourly reading columns.
 
 ```{r calc-daily-sums}
-## turn this into daily sums instead of raw data
 
+## turn this into daily sums instead of raw data
 df <- calc_daily_sums(df)
 
 head(df)
@@ -103,13 +119,13 @@ str(df)
 
 ## merge metadata
 
-Here we merge in the metadata, joining by `meter_ref` field.
+Here we merge in the metadata (extra columns on meter group, meter location, how the usage from that meter group should be apportioned between CCI orgs, etc), joining by the `meter_ref` field which is present in both the meter readings data `df` and the metadata `meta`.
 
 ```{r merge-in-meta}
 
-df <- merge(df, meta)
+df <- merge(df, meta)  # merge metadata in
 
-head(df)
+head(df)  # check the new columns
 str(df)
 
 ```
@@ -118,11 +134,13 @@ str(df)
 
 Here we sort out the fact that some meters are just power, some are just lighting, and some are both power and lighting.
 
-Let's make a `pwr`, `ltg`, and `both` column for all meter/days.
+The custom function `combine_power_lighting()` takes the daily sum data and uses `tidyr::pivot_wider()` to match the power/lighting/both values for each pair of meters (i.e. each unique `meter_group`). Look in the `functions.R` file to see the code for this function.
+
+Since each pair of meters is combined into one, we end up with half the number of rows in the dataset, and a few extra columns indicating the usage for that `meter_group` from power (`pwr`), lighting (`ltg`) and both power & lighting (`both`).
 
 ```{r power-lighting}
 
-## test on a subset of the dataset
+## test on a subset of the dataset (commented out - used only for testing)
 # t_df <- subset(df, meter_group %in% c("02B0F5-DB-3D", "02B0FB-DB-ET-1"))
 # t_new <- combine_power_lighting(t_df)
 
@@ -132,9 +150,9 @@ df_new <- combine_power_lighting(df)
 ## we should have half as many rows now - each pair of meters has been combined into one row
 nrow(df_new) / nrow(df)
 
-## check data
-head(df)
-str(df)
+## check data - usage column has been replaced with pwr / ptg / both
+head(df_new)
+str(df_new)
 
 ## update df and clean up
 df <- df_new
@@ -144,7 +162,7 @@ rm(df_new)
 
 ## write to file
 
-Optional: write the resulting dataframe to file.
+Optional: write the resulting dataframe to file. This file is not tracked by git (it's in the `.gitignore` file).
 
 ```{r write-to-file}
 
@@ -159,14 +177,15 @@ Just an example of summarising the data.
 
 ```{r summaries-example}
 
-head(df)
+# head(df)
 
 ## sum over all meters in a floor/location by year and month
 summ1 <- df %>%
-  dplyr::group_by(floor, location, perc_to_CCI, year, month) %>%
-  dplyr::summarise(total_usage = sum(both)) %>% as.data.frame()
+  dplyr::group_by(floor, location, year, month) %>%
+  dplyr::summarise(total_usage = sum(both)) %>%   # both field = all lighting and power usage
+  as.data.frame()
 
-head(summ1)
+head(summ1)  # check output
 
 ```
 
@@ -177,7 +196,8 @@ An example plot using the summary made above.
 
 ```{r plots-example}
 
-ggplot2::ggplot(data = summ1, aes(x = month, y = total_usage)) +
+## quick line graph of month usage data, split out by location field
+ggplot2::ggplot(data = summ1, aes(x = month, y = total_usage, col = floor)) +
   ggplot2::geom_line() +
   ggplot2::facet_wrap(~location)
 

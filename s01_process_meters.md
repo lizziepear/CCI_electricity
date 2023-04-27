@@ -1,7 +1,7 @@
 process meter readings
 ================
 Lizzie Pearmain
-2023-04-14
+April 2023
 
 - <a href="#setup" id="toc-setup">setup</a>
 - <a href="#read-meters" id="toc-read-meters">read meters</a>

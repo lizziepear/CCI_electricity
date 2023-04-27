@@ -1,0 +1,71 @@
+---
+title: "plot data"
+author: ""
+date: "April 2023"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 2
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## setup
+
+Here we load any required packages, source functions, and read in the processed meter readings data.
+
+```{r set-up-read-meta, message=FALSE, warning=FALSE}
+
+## load packages
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+
+## source functions
+source("functions_for_plots.R")  # currently empty!
+
+## read meter data and check the structure
+df <- read.csv("processed_meter_data.csv")
+head(df)
+```
+
+## summarise and plot
+
+Here we can start developing code to plot the data in various ways! 
+
+Once we've finalised some plots, we can turn the code into functions with specific inputs and outputs, and put the code for those functions in `functions_for_plots.R`.
+
+
+Here is a quick example of summarising the data.
+
+```{r summaries-example}
+
+## sum over all meters in a floor/location by year and month
+summ1 <- df %>%
+  dplyr::group_by(floor, location, year, month) %>%
+  dplyr::summarise(total_usage = sum(both)) %>%   # both field = all lighting + power usage
+  as.data.frame()
+
+head(summ1)  # check output
+
+```
+
+Here is an example plot using the summary made above.
+
+```{r plots-example}
+
+## quick line graph of month usage data, split out by location field
+ggplot2::ggplot(data = summ1, aes(x = month, y = total_usage, col = floor)) +
+  ggplot2::geom_line() +
+  ggplot2::facet_wrap(~location)
+
+
+```
+
+Continue from here!
+
+

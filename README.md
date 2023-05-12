@@ -9,12 +9,32 @@ Importing and exploring CCI electricity usage data.
 
 * `meter_metadata.csv` is a metadata table which is used to make sure we're reading in the right files, and for matching pairs of meters to their location and the percentage of their usage that should be apportioned to CCI, etc.
 
-* `data_meters` is a folder containing the raw meter readings (xlsx files). These are not tracked by git so are not in the online version of this repo.
+* `data_meters` is a folder containing the raw meter readings (`.xlsx` files). These are not tracked by git so are not in the online version of this repo.
 
-* `s01_process_meters.Rmd` is a first go at using the functions to read in all the meter readings, process them, save the processed data to a file (not tracked by git so not in the online version of this repo) and do some summaries and plots. Knitting this file produces the associated outputs `s01_process_meters.md` and `s01_process_meters/figure-gfm`.
+* `plots` is a folder containing any plots that we save to file (to prevent them cluttering up the main folder).
 
-**To see the current output of `s01_process_meters.Rmd`, click on `s01_process_meters.md`.**
 
+### R scripts and outputs
+
+* **script 1: process meters**: this is a first go at using the functions to read in all the meter readings, process them, save the processed data to a file (not tracked by git so not in the online version of this repo). 
+    * `s01_process_meters.Rmd` is an R markdown file containing the R code and explanations. Knitting this file produces the associated outputs:
+    * `s01_process_meters.md` shows the outputs of the R script. Click on this file to view the outputs online
+    * `s01_process_meters/figure-gfm` contains the plots used in the `.md` file above (just ignore this folder)
+    * This script also saves a file called `processed_meter_data.csv` (not on the online GitHub version).
+
+* **script 2: summarise and plot**: this contains some code to make summaries and plots. 
+    * `s02_plots.Rmd` = the R code and explanations 
+    * `s02_plots.md` and `s02_plots/figure-gfm` = outputs of the R markdown file
+    * This script also saves some plots as `.png` files in the `plots` folder.
+
+
+### administrative files:
+
+* `.gitignore`: this tells git which files *not* to track. We use this to make sure that the raw data, processed data, and plots are not version-controlled and are not uploaded to GitHub.
+* `LICENSE`: this file specifies that other people who find this repo on GitHub may re-use the code.
+* `README.md`: there is a 'readme' file in each folder explaining what the folder is for. These help people to navigate the folders on GitHub.
+
+***
 
 ## next steps
 
@@ -23,6 +43,7 @@ Importing and exploring CCI electricity usage data.
 * develop more functions for summarising and plotting in useful ways
 * develop a shiny app for displaying the data (need to think about how the data processing would be controlled)
 
+***
 
 ## shiny app
 

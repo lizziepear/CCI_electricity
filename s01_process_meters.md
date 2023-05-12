@@ -10,10 +10,6 @@ April 2023
 - <a href="#fill-powerlighting-gaps" id="toc-fill-powerlighting-gaps">fill
   power/lighting gaps</a>
 - <a href="#write-to-file" id="toc-write-to-file">write to file</a>
-- <a href="#example-summaries" id="toc-example-summaries">example
-  summaries</a>
-- <a href="#example-plots" id="toc-example-plots">example plots</a>
-- <a href="#next-steps" id="toc-next-steps">next steps</a>
 
 ## setup
 
@@ -378,58 +374,11 @@ rm(df_new)
 
 ## write to file
 
-Optional: write the resulting dataframe to file. This file is not
-tracked by git (it’s in the `.gitignore` file).
+Write the resulting dataframe to file. This file is not tracked by git
+(it’s in the `.gitignore` file).
 
 ``` r
 write.csv(df, "processed_meter_data.csv", row.names=FALSE)
 ```
-
-## example summaries
-
-Just an example of summarising the data.
-
-``` r
-# head(df)
-
-## sum over all meters in a floor/location by year and month
-summ1 <- df %>%
-  dplyr::group_by(floor, location, year, month) %>%
-  dplyr::summarise(total_usage = sum(both)) %>%   # both field = all lighting and power usage
-  as.data.frame()
-```
-
-    ## `summarise()` has grouped output by 'floor', 'location', 'year'. You can
-    ## override using the `.groups` argument.
-
-``` r
-head(summ1)  # check output
-```
-
-    ##   floor       location year month total_usage
-    ## 1     1 Floor 1 Zone A 2022     7    1229.191
-    ## 2     1 Floor 1 Zone A 2022     8    1289.043
-    ## 3     1 Floor 1 Zone A 2022     9    1333.270
-    ## 4     1 Floor 1 Zone A 2022    10    1343.344
-    ## 5     1 Floor 1 Zone A 2022    11    1451.762
-    ## 6     1 Floor 1 Zone A 2022    12    1146.363
-
-## example plots
-
-An example plot using the summary made above.
-
-``` r
-## quick line graph of month usage data, split out by location field
-ggplot2::ggplot(data = summ1, aes(x = month, y = total_usage, col = floor)) +
-  ggplot2::geom_line() +
-  ggplot2::facet_wrap(~location)
-```
-
-![](s01_process_meters_files/figure-gfm/plots-example-1.png)<!-- -->
-
-## next steps
-
-Develop some functions to take the overall table and output the
-summaries and plots that would be useful.
 
 *End.*

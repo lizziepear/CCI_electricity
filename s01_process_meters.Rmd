@@ -162,52 +162,13 @@ rm(df_new)
 
 ## write to file
 
-Optional: write the resulting dataframe to file. This file is not tracked by git (it's in the `.gitignore` file).
+Write the resulting dataframe to file. This file is not tracked by git (it's in the `.gitignore` file).
 
 ```{r write-to-file}
 
 write.csv(df, "processed_meter_data.csv", row.names=FALSE)
 
 ```
-
-
-## example summaries
-
-Just an example of summarising the data.
-
-```{r summaries-example}
-
-# head(df)
-
-## sum over all meters in a floor/location by year and month
-summ1 <- df %>%
-  dplyr::group_by(floor, location, year, month) %>%
-  dplyr::summarise(total_usage = sum(both)) %>%   # both field = all lighting and power usage
-  as.data.frame()
-
-head(summ1)  # check output
-
-```
-
-
-## example plots
-
-An example plot using the summary made above.
-
-```{r plots-example}
-
-## quick line graph of month usage data, split out by location field
-ggplot2::ggplot(data = summ1, aes(x = month, y = total_usage, col = floor)) +
-  ggplot2::geom_line() +
-  ggplot2::facet_wrap(~location)
-
-
-```
-
-
-## next steps
-
-Develop some functions to take the overall table and output the summaries and plots that would be useful.
 
 
 *End.*

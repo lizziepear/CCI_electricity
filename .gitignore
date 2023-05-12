@@ -4,7 +4,13 @@ CCI_electricity.Rproj
 # do not track anything in data_meters
 data_meters/*.csv
 data_meters/*.xlsx
+
+# do not track the processed meter data
 processed_meter_data.csv
+
+# do not track anything in plots apart from the README
+plots/*
+!plots/README.md
 
 
 ## General gitignore for R projects
